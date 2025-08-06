@@ -3,7 +3,6 @@ package com.wizpizz.crumbcontrol.hooks
 import android.util.Log
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import com.wizpizz.crumbcontrol.hooks.ToastHook
 
 
 class HookEntry: IXposedHookLoadPackage {
