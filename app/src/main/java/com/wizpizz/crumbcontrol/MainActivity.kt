@@ -1,52 +1,52 @@
 package com.wizpizz.crumbcontrol
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.wizpizz.crumbcontrol.data.PreferencesManager
+import com.wizpizz.crumbcontrol.repository.AppRepository
+import com.wizpizz.crumbcontrol.ui.screens.AppSelectionScreen
 import com.wizpizz.crumbcontrol.ui.theme.CrumbControlTheme
+import com.wizpizz.crumbcontrol.viewmodel.AppSelectionViewModel
 
 class MainActivity : ComponentActivity() {
+    
+    private lateinit var appRepository: AppRepository
+    private lateinit var preferencesManager: PreferencesManager
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Initialize repositories
+        appRepository = AppRepository(this)
+        preferencesManager = PreferencesManager(this)
+        
         enableEdgeToEdge()
+        
         setContent {
             CrumbControlTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "asdf",
-                        modifier = Modifier.padding(innerPadding)
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    val viewModel: AppSelectionViewModel = viewModel(
+                        factory = AppSelectionViewModel.Factory(
+                            appRepository = appRepository,
+                            preferencesManager = preferencesManager
+                        )
                     )
-                    Button(
-                        onClick = {
-                            Toast.makeText(
-                                this,
-                                "Button clicked!",
-                                Toast.LENGTH_SHORT
-                            ).show()  // Replace with your toast function
-                        },
-                        modifier = Modifier.padding(innerPadding)
-                    ) {
-                        Text(text = "Click Me")
-                    }
+                    
+                    AppSelectionScreen(
+                        viewModel = viewModel
+                    )
                 }
             }
         }
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }
